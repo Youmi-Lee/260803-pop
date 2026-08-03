@@ -100,9 +100,16 @@ fig.update_layout(
     height=700,
     legend_title_text="0~4세 인구 비율",
 )
-# 애니메이션 프레임 전환 속도 조절 (선택 사항)
-fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = 800
-fig.layout.updatemenus[0].buttons[0].args[1]["transition"]["duration"] = 300
+# 애니메이션 프레임 전환 속도 조절 (선택 사항, 구조가 없을 수도 있어 안전하게 처리)
+try:
+    if fig.layout.updatemenus and fig.layout.updatemenus[0].buttons:
+        play_button = fig.layout.updatemenus[0].buttons[0]
+        if "frame" in play_button.args[1]:
+            play_button.args[1]["frame"]["duration"] = 800
+        if "transition" in play_button.args[1]:
+            play_button.args[1]["transition"]["duration"] = 300
+except Exception:
+    pass  # 속도 조절은 선택 사항이므로 실패해도 지도는 그대로 표시
 
 st.plotly_chart(fig, width="stretch")
 
